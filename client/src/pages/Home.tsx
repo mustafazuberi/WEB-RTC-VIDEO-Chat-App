@@ -1,5 +1,5 @@
 import { useSocket } from "../providers/Socket";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface RoomJoinedPayload {
@@ -25,9 +25,12 @@ const Home = () => {
     });
   };
 
-  const handleRoomJoined = ({ roomId }: RoomJoinedPayload) => {
-    navigate(`/room/${roomId}`);
-  };
+  const handleRoomJoined = useCallback(
+    ({ roomId }: RoomJoinedPayload) => {
+      navigate(`/room/${roomId}`);
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     socket.on("joined-room", handleRoomJoined);
