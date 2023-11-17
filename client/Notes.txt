@@ -1,0 +1,47 @@
+Web RTC 
+Web Rtc ek technology ha jo browsers k ander built in ati hai 
+
+
+Web RTC kii help se hum 2 browsers ko apas me connect kar sakte hain or us me data sharing kar sakte hain 
+data sharing like : Files video voice etc
+
+lekn jab bh Internet par data sharing kar rahe hote hn tw internet kuch protocols follow karte hain 
+TCP : Transfer control protocol 
+
+Ya protocol basically data ke packets jo arrange karta ha monitor karta hai or make sure karta hai ke koi bh packet lost na hoo lekn TCP ke ander humiein 1 server chahye hota hai to manage all the stuff
+
+Agar Hum Video call karte hain tw kabhi kabhi video call lack karti hai 
+Ya saari live streams or video call  or google meet ya sab udp follow karte hain
+
+UDP mein hum browser connect kar sakte hain Without server So WebRTC works on UDP protocol 
+lekn is ka ek disadvantage hai ke jab bh hum data share karte hain tw packets at the time of sharing lost ho sakte hain or file corrupt ho sakti hai
+
+
+TCP make sure krta hai ke data ka sare packets share ho rahe hn k nahi
+
+
+Hum 2 browsers ko connect karne ke lye IP address ki help sa karte hn Via web rtc
+
+
+HOW TO KNOW DEVICE IP ADDRESS
+
+
+us ke lye phle apni device ka public Ip addrress pata lagana parega
+private ip pata hota ha lekn public ip address user ko nahi pata hota 
+
+device ko apna private ip address pata hota h public nahi 
+public Ip address pata lagane ke lyeye hum turn servers or ice servers use karte hain  ya response me batata h ke kis Ip address se mere pas or phir at the end device ko apna assigned public ip address pata lag jata ha 
+
+
+AFTER KNOWING IP ADDRESS
+
+SIGNALING
+Ab dono devices ko apne i adresses share karne hain tw us ke lye source ki need hai is part ko signaling kehte hn 
+hum is ke lye simple sa socket server banate hain is ka kam bas Ip address 2 users ke aik dusre sa share karwana hota h 
+
+humare pas ak SDP hoti h (session description ) SDP ke andar public Ip private Ip or route to connect that device ya sab hota h 
+ya SDP hum node server ko dete hain  or node dusri device ko dedega 
+dusre user bh server ko dega sdp phir woh bh 1st user ko SDP de dega
+ 
+bas after sharing Ip server ka kam khatam or Ab hum kuch bh share kar sakte hn audio call video call files etc
+
