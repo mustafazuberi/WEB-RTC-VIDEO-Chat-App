@@ -1,10 +1,15 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useSocket } from "../providers/Socket";
 import { usePeer } from "../providers/Peer";
 
 const Room = () => {
+  const [myStream, setMyStream] = useState<null | MediaStream>(null);
+  const MyStreamRef = useRef<HTMLVideoElement>(null);
+  const RemoteStreamRef = useRef<HTMLVideoElement>(null);
+
   const socketContext = useSocket();
   const peerContext = usePeer();
+
   if (
     !socketContext ||
     !socketContext.socket ||
@@ -12,10 +17,12 @@ const Room = () => {
     !peerContext.createOffer ||
     !peerContext.peer
   ) {
-    return;
+    return null; // Return null or a loading component if dependencies are not ready
   }
+
   const { socket } = socketContext;
-  const { peer, createOffer, createAnswer } = peerContext;
+  const { peer, createOffer, createAnswer, sendStream, remoteStream } =
+    peerContext;
 
   const handleNewUserJoined = useCallback(
     async ({ emailId }: { emailId: string }) => {
@@ -43,11 +50,24 @@ const Room = () => {
 
   const handleOnCallAccept = useCallback(
     async ({ ans }: { ans: RTCSessionDescriptionInit }) => {
-      await peer.setRemoteDescription(ans);
-      console.log("call accepter ", ans);
+      try {
+        await peer.setRemoteDescription(ans);
+        console.log("call accepter ", ans);
+      } catch (error) {
+        console.error("Error setting remote description: ", error);
+      }
     },
-    [socket]
+    [peer]
   );
+
+  const getUserMediaStream = useCallback(async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true,
+    });
+    sendStream(stream);
+    setMyStream(stream);
+  }, [sendStream]);
 
   useEffect(() => {
     socket.on("user-joined", handleNewUserJoined);
@@ -61,9 +81,27 @@ const Room = () => {
     };
   }, [handleNewUserJoined, socket]);
 
+  useEffect(() => {
+    getUserMediaStream();
+  }, [getUserMediaStream]);
+
+  useEffect(() => {
+    if (MyStreamRef.current && myStream) {
+      MyStreamRef.current.srcObject = myStream;
+    }
+  }, [myStream]);
+
+  useEffect(() => {
+    if (RemoteStreamRef.current && remoteStream) {
+      RemoteStreamRef.current.srcObject = remoteStream;
+    }
+  }, [remoteStream]);
+
   return (
     <div>
-      <h1 className="text-3xl">Hey there You are in room</h1>
+      <h1 className="text-3xl">Hey there! You are in a room</h1>
+      <video ref={MyStreamRef} autoPlay playsInline controls />
+      <video ref={RemoteStreamRef} autoPlay playsInline controls />
     </div>
   );
 };
